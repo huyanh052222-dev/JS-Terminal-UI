@@ -219,16 +219,38 @@
             },
 // ----------------------------------------------------------------------------------------------------------------------------  
             2: () =>{
-                log('Solution for Cau 3 executed.')
+                log('Solution for Cau 3 executed: <br>>  No need input data!')
                 let RawData = inputField.value;
 
-                if(!RawData) {
-                    log('No input provided.');
-                    log('Please check your fill data (test case)!');
-                    return;
+                // if(!RawData) {
+                //     log('Input is not required for this case.');
+                //     log('No input provided.');
+                //     log('Please check your fill data (test case)!');
+                //     return;
                     
-                }
+                // }
                 
+                const randomPromise = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    const randomNumber = Math.floor(Math.random() * 10) + 1;
+
+                    if (randomNumber) {
+                        resolve(randomNumber);
+                    } else {
+                        reject("Lỗi: Không thể tạo số ngẫu nhiên.");
+                    }
+                }, 2000); 
+                });
+
+                log("Generating result (2s)...");
+                
+                randomPromise
+                    .then((result) => {
+                        log(`Random Number: ${result}`);
+                    })
+                    .catch((error) => {
+                        log(error);
+                });
             },
 // ----------------------------------------------------------------------------------------------------------------------------  
             3: () =>{
@@ -242,6 +264,7 @@
                     
                 }
 
+                
             },
 // ----------------------------------------------------------------------------------------------------------------------------  
             4: () =>{
