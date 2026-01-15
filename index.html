@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Orbitron:wght@400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <style>
+        body{
+            font-family: 'Roboto', sans-serif;
+            margin: 0 auto;
+            background-color: rgb(0, 0, 0);
+            background-image: linear-gradient(#212121 1px, transparent 1px)
+                              ,linear-gradient(90deg, #212121 1px, transparent 1px);
+            background-size: 3rem 3rem;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .container{
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #212121;
+            .wrap-console{
+                width: 100%;
+                height: 200px;
+                box-sizing: border-box;
+                padding: 10px;
+                background-color: #121b16;
+                font-weight: 500;
+                color: rgb(255, 253, 251);
+                font-family: 'Courier New', Courier, monospace;
+                margin-bottom: 20px;
+                border-radius: 10px;
+                overflow-y: scroll;
+            }
+            .board{
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                .wrap-input{
+                    width: 100%;
+                    height: 100px;
+                    background-color: #282828;
+                    border-radius: 10px;
+                    input{
+                        width: 100%;
+                        height: 100%;
+                        box-sizing: border-box;
+                        padding: 10px;
+                        border: none;
+                        border-radius: 10px;
+                        font-size: 16px;
+                        background-color: #353535;
+                        color: white;
+                    }
+                }
+                .wrap-button{
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    button{
+                        flex: 1 1 calc(33.333% - 10px);
+                        padding: 10px;
+                        border: none;
+                        border-radius: 5px;
+                        background-color: #353635;
+                        color: white;
+                        font-size: 16px;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                    }
+                    button:hover{
+                        background-color: #1ca923;
+                    }
+                    button:active{
+                        opacity: 0.8;
+                    }
+                }
+
+                #reload{
+                    margin-top: 10px;
+                    width: 100%;
+                    padding: 10px;
+                    border: none;
+                    border-radius: 5px;
+                    background-color: #e63946;
+                    color: white;
+                    font-size: 16px;
+                    cursor: pointer;
+                    transition: background-color 0.3s ease;
+                }
+                #reload:hover{
+                    background-color: #b02a36;
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="wrap-console">> Press button 1 to 6 to see solutions... <br>
+            > Remeber to fill your data (test case) in the input box below first!
+        </div>
+        <div class="board">
+            <div class="wrap-input">
+                <input type="text" id="user-input" placeholder="Fill your data (test case) here...">
+            </div>
+            <div class="wrap-button">
+                <button>Cau 1</button>
+                <button>Cau 2</button>
+                <button>Cau 3</button>
+                <button>Cau 4</button>
+                <button>Cau 5</button>
+                <button>Cau 6</button>
+
+            </div>
+
+            <button id="reload" onclick="window.location.reload()">Reload</button>
+        </div>
+    </div>
+    <script>
+        function $(selector) { 
+            return document.querySelector(selector); 
+        }
+        function $$(selector) { 
+            return document.querySelectorAll(selector); 
+        }
+
+        const consoleScreen = $('.wrap-console');
+        const inputArea = $('.wrap-input'); 
+        const buttons = $$('.wrap-button button');
+
+        function log(message) {
+            consoleScreen.innerHTML += `> ${message}<br>`;
+            consoleScreen.scrollTop = consoleScreen.scrollHeight;
+        }
+
+        function clearConsole() {
+            consoleScreen.innerHTML = '';
+        }
+   
+        const inputField = $('#user-input');
+
+        const solutions = {
+            0: () =>{ 
+                log('Solution for Cau 1 executed.')
+                let RawData = inputField.value;
+
+                if(!RawData) {
+                    log('No input provided.');
+                    log('Please check your fill data (test case)!');
+                    return;
+                    
+                }
+
+                let myArray = RawData.split(',').map(item => item.trim());
+                log(`Input Array: [${myArray.join(', ')}]`);
+                log('-----------------------------');
+
+                function consoleLog(element) {
+                    log(`Item: ${element}`);
+                }
+
+                forEchTest(myArray, consoleLog);
+            },
+// ----------------------------------------------------------------------------------------------------------------------------  
+            1: () =>{ 
+                log('Solution for Cau 2 executed.')
+                let RawData = inputField.value;
+
+                if(!RawData) {
+                    log('No input provided.');
+                    log('Please check your fill data (test case)!');
+                    return;
+                    
+                }
+
+                let numberArray = RawData.split(',').map(item => {
+                    let num = Number(item.trim());
+                    return isNaN(num) ? 0 : num;
+                });
+
+                if(numberArray.length < 2) {
+                    log('Please provide at least two numbers separated by commas.');
+                    return;
+                }
+                log(`Input Number Array: [${numberArray.join(', ')}]`);
+                log('-----------------------------');
+
+                function consoleLog(num1, num2) {
+                    let sum = num1 + num2;
+                    log(`(${num1}, ${num2}) => Sum: ${sum}`);
+                }
+
+                forEachPair(numberArray, consoleLog);
+            },
+// ----------------------------------------------------------------------------------------------------------------------------  
+            2: () =>{
+                log('Solution for Cau 3 executed.')
+                let RawData = inputField.value;
+
+                if(!RawData) {
+                    log('No input provided.');
+                    log('Please check your fill data (test case)!');
+                    return;
+                    
+                }
+                
+            },
+// ----------------------------------------------------------------------------------------------------------------------------  
+            3: () =>{
+                log('Solution for Cau 4 executed.')
+                let RawData = inputField.value;
+
+                if(!RawData) {
+                    log('No input provided.');
+                    log('Please check your fill data (test case)!');
+                    return;
+                    
+                }
+
+            },
+// ----------------------------------------------------------------------------------------------------------------------------  
+            4: () =>{
+                log('Solution for Cau 5 executed.')
+                let RawData = inputField.value;
+
+                if(!RawData) {
+                    log('No input provided.');
+                    log('Please check your fill data (test case)!');
+                    return;
+                    
+                }
+
+            },
+// ----------------------------------------------------------------------------------------------------------------------------  
+            5: () =>{
+                log('Solution for Cau 6 executed.')
+                let RawData = inputField.value;
+
+                if(!RawData) {
+                    log('No input provided.');
+                    log('Please check your fill data (test case)!');
+                    return;
+                    
+                }
+                 
+
+            }
+        };
+
+        buttons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                clearConsole();
+                if (solutions[index]) {
+                    solutions[index]();
+                } else {
+                    log('No solution defined for this button.');
+                    
+                }
+            });
+        });
+
+
+        //Cau 1
+        function forEchTest(array, callback) {
+            for (let i = 0; i < array.length; i++) {
+                callback(array[i], i, array);
+            }
+        }
+
+        //Cau 2
+        function forEachPair(array, callback) {
+            for(let i = 0; i < array.length - 1; i++) {
+                let currentElement = array[i];
+                let nextElement = array[i + 1];
+                callback(currentElement, nextElement);
+            }
+        }
+    </script>
+</body>
+</html>
