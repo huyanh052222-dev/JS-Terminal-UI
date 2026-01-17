@@ -150,12 +150,12 @@ const solutions = {
 // ----------------------------------------------------------------------------------------------------------------------------  
     5: () => {
         log('Solution for Cau 6 executed.');
-        log('Đang kết nối tới máy chủ lấy IP...');
+        log('Taking IP...');
 
         fetch('https://api.ipify.org?format=json')
         .then(response => {
             if (!response.ok) {
-                throw new Error('Không thể kết nối tới dịch vụ IP.');
+                throw new Error('Cannot access the service of IP.');
             }
             return response.json();
         })
@@ -165,7 +165,7 @@ const solutions = {
             log('-----------------------------');
         })
         .catch(error => {
-            log(`Lỗi: ${error.message}`);
+            log(`Error: ${error.message}`);
         });
     }
 };
@@ -207,7 +207,7 @@ function fetchAPIData() {
     const closeBtn = document.getElementById('close');
 
     if (!screen || !container) {
-        log('LỖI: Thiếu HTML. Hãy kiểm tra lại file index.html');
+        log('Error!');
         return;
     }
 
