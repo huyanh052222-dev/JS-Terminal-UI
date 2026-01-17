@@ -24,6 +24,112 @@
             padding: 10px;
             animation: moveGrid 1s linear infinite;
         }
+
+.screen-cau5 {
+    position: fixed;
+    top: 0; left: 0;
+    display: none;
+    width: 100%; height: 100vh;
+    background: rgba(0, 0, 0, 0.613);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.api-content {
+    background: white;
+    width: 90%;
+    max-width: 1200px;
+    height: 90vh;
+    padding: 20px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.header-api {
+    display: flex;
+    justify-content: space-between;
+}
+
+#search {
+    padding: 10px;
+    width: 300px;
+    font-size: 16px;
+}
+
+.countries-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 280px; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.flag-container {
+    height: 160px;
+    background: #f0f0f0;
+    width: 100%;
+}
+
+.flag-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; 
+}
+
+.country-name {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.info-row {
+    font-size: 16px;
+    color: #555;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #000;
+}
+.close-btn {
+    background: rgb(234, 64, 64);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
         @keyframes moveGrid {
             0% {
                 background-position: 0 0, 0 0;
@@ -117,6 +223,7 @@
                 }
             }
         }
+
     </style>
 </head>
 <body>
@@ -141,188 +248,16 @@
             <button id="reload" onclick="window.location.reload()">Reload</button>
         </div>
     </div>
-    <script>
-        function $(selector) { 
-            return document.querySelector(selector); 
-        }
-        function $$(selector) { 
-            return document.querySelectorAll(selector); 
-        }
-
-        const consoleScreen = $('.wrap-console');
-        const inputArea = $('.wrap-input'); 
-        const buttons = $$('.wrap-button button');
-
-        function log(message) {
-            consoleScreen.innerHTML += `> ${message}<br>`;
-            consoleScreen.scrollTop = consoleScreen.scrollHeight;
-        }
-
-        function clearConsole() {
-            consoleScreen.innerHTML = '';
-        }
-   
-        const inputField = $('#user-input');
-
-        const solutions = {
-            0: () =>{ 
-                log('Solution for Cau 1 executed.')
-                let RawData = inputField.value;
-
-                if(!RawData) {
-                    log('No input provided.');
-                    log('Please check your fill data (test case)!');
-                    return;
-                    
-                }
-
-                let myArray = RawData.split(',').map(item => item.trim());
-                log(`Input Array: [${myArray.join(', ')}]`);
-                log('-----------------------------');
-
-                function consoleLog(element) {
-                    log(`Item: ${element}`);
-                }
-
-                forEchTest(myArray, consoleLog);
-            },
-// ----------------------------------------------------------------------------------------------------------------------------  
-            1: () =>{ 
-                log('Solution for Cau 2 executed.')
-                let RawData = inputField.value;
-
-                if(!RawData) {
-                    log('No input provided.');
-                    log('Please check your fill data (test case)!');
-                    return;
-                    
-                }
-
-                let numberArray = RawData.split(',').map(item => {
-                    let num = Number(item.trim());
-                    return isNaN(num) ? 0 : num;
-                });
-
-                if(numberArray.length < 2) {
-                    log('Please provide at least two numbers separated by commas.');
-                    return;
-                }
-                log(`Input Number Array: [${numberArray.join(', ')}]`);
-                log('-----------------------------');
-
-                function consoleLog(num1, num2) {
-                    let sum = num1 + num2;
-                    log(`(${num1}, ${num2}) => Sum: ${sum}`);
-                }
-
-                forEachPair(numberArray, consoleLog);
-            },
-// ----------------------------------------------------------------------------------------------------------------------------  
-            2: () =>{
-                log('Solution for Cau 3 executed: <br>>  No need input data!')
-                let RawData = inputField.value;
-
-                // if(!RawData) {
-                //     log('Input is not required for this case.');
-                //     log('No input provided.');
-                //     log('Please check your fill data (test case)!');
-                //     return;
-                    
-                // }
-                
-                const randomPromise = new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    const randomNumber = Math.floor(Math.random() * 10) + 1;
-
-                    if (randomNumber) {
-                        resolve(randomNumber);
-                    } else {
-                        reject("Lỗi: Không thể tạo số ngẫu nhiên.");
-                    }
-                }, 2000); 
-                });
-
-                log("Generating result (2s)...");
-                
-                randomPromise
-                    .then((result) => {
-                        log(`Random Number: ${result}`);
-                    })
-                    .catch((error) => {
-                        log(error);
-                });
-            },
-// ----------------------------------------------------------------------------------------------------------------------------  
-            3: () =>{
-                log('Solution for Cau 4 executed.')
-                let RawData = inputField.value;
-
-                if(!RawData) {
-                    log('No input provided.');
-                    log('Please check your fill data (test case)!');
-                    return;
-                    
-                }
-
-                
-            },
-// ----------------------------------------------------------------------------------------------------------------------------  
-            4: () =>{
-                log('Solution for Cau 5 executed.')
-                let RawData = inputField.value;
-
-                if(!RawData) {
-                    log('No input provided.');
-                    log('Please check your fill data (test case)!');
-                    return;
-                    
-                }
-
-            },
-// ----------------------------------------------------------------------------------------------------------------------------  
-            5: () =>{
-                log('Solution for Cau 6 executed.')
-                let RawData = inputField.value;
-
-                if(!RawData) {
-                    log('No input provided.');
-                    log('Please check your fill data (test case)!');
-                    return;
-                    
-                }
-                 
-
-            }
-        };
-
-        buttons.forEach((button, index) => {
-            button.addEventListener('click', () => {
-                clearConsole();
-                if (solutions[index]) {
-                    solutions[index]();
-                } else {
-                    log('No solution defined for this button.');
-                    
-                }
-            });
-        });
-
-
-        //Cau 1
-        function forEchTest(array, callback) {
-            for (let i = 0; i < array.length; i++) {
-                callback(array[i], i, array);
-            }
-        }
-
-        //Cau 2
-        function forEachPair(array, callback) {
-            for(let i = 0; i < array.length - 1; i++) {
-                let currentElement = array[i];
-                let nextElement = array[i + 1];
-                callback(currentElement, nextElement);
-            }
-        }
-    </script>
+    <div class="screen-cau5">
+        <div class="api-content">
+            <div class="header-api">
+                <h2>Nation List</h2>
+                <button id="close" class="close-btn">close</button>
+            </div>
+            <div id="countries-container" class="countries-grid"></div>
+        </div>
+    </div>
+</div>
+    <script src="main.js" defer></script>
 </body>
 </html>
