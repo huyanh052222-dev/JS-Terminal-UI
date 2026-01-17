@@ -246,15 +246,7 @@ function fetchAPIData() {
             list.forEach(country => {                
                 const name = country.name?.common || country.name || country.countryName || "Unknown Name";
 
-                let capital = "This api link dont have :v";
-                if (Array.isArray(country.capital)) {
-                    capital = country.capital[0];
-                } else if (country.capital) {
-                    capital = country.capital;
-                } else if (country.city) {
-                    capital = country.city;
-                }
-
+                
                 let flag = "https://via.placeholder.com/300x160?text=No+Flag";
                 if (country.flags?.svg) flag = country.flags.svg;
                 else if (country.flags?.png) flag = country.flags.png;
@@ -269,7 +261,7 @@ function fetchAPIData() {
                             <h3 class="country-name">${name}</h3>
                             
                             <div class="info-row">
-                                <span class="info-label">Cap:</span> ${capital}
+                                
                             </div>
                         </div>
                     </div>
