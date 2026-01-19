@@ -201,79 +201,190 @@ function forEachPair(array, callback){
 
 
 //cau 5
-function fetchAPIData(){
+// function fetchAPIData(){
+//     const screen = document.querySelector('.screen-cau5');
+//     const container = document.getElementById('countries-container');
+//     const closeBtn = document.getElementById('close');
+
+//     if(!screen || !container){
+//         log('Error!');
+//         return;
+//     }
+
+//     screen.style.display = "flex";
+
+//     closeBtn.onclick = function(){
+//         screen.style.display = "none";
+//     };
+
+//     async function loadAllCountries(){
+//         try{
+//             if(container.children.length > 1) return; 
+
+//             container.innerHTML = '<div class="message">Loading data...</div>';
+            
+//             const response = await fetch('https://open.oapi.vn/location/countries');
+            
+//             if(!response.ok) throw new Error('Error API connection');
+
+//             const data = await response.json();
+            
+//             console.log("Loaded data:", data);
+
+//             let list = [];
+//             if(Array.isArray(data)) list = data;
+//             else if(data && Array.isArray(data.data)) list = data.data;
+//             else if(typeof data === 'object') list = Object.values(data);
+
+//             if(list.length === 0) {
+//                 container.innerHTML = '<div class="message">No found any contry data</div>';
+//                 return;
+//             }
+
+//             let htmlContent = ''; 
+
+//             list.forEach(country =>{                
+//                 const name = country.name?.common || country.name || country.countryName || "Unknown Name";
+
+                
+//                 let flag = "https://via.placeholder.com/300x160?text=No+Flag";
+//                 if (country.flags?.svg) flag = country.flags.svg;
+//                 else if (country.flags?.png) flag = country.flags.png;
+//                 else if (country.flag) flag = country.flag;
+
+//                 htmlContent += 
+//                 `
+//                     <div class="card">
+//                         <div class="flag-container">
+//                             <img src="${flag}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x160?text=Image+Error'">
+//                         </div>
+//                         <div class="card-body">
+//                             <h3 class="country-name">${name}</h3>
+                            
+//                             <div class="info-row">
+                                
+//                             </div>
+//                         </div>
+//                     </div>
+//                 `;
+//             });
+
+//             container.innerHTML = htmlContent;
+
+//         }catch (error) {
+//             console.error(error);
+//             container.innerHTML = `<div class="message error">Error: ${error.message}</div>`;
+//         }
+//     }
+
+//     loadAllCountries();
+// }
+
+function fetchAPIData() {
     const screen = document.querySelector('.screen-cau5');
     const container = document.getElementById('countries-container');
     const closeBtn = document.getElementById('close');
+    const searchInput = document.getElementById('search-input');
+    const paginationContainer = document.getElementById('pagination');
 
-    if(!screen || !container){
-        log('Error!');
-        return;
-    }
+    let allCountries = [];
+    let filteredCountries = [];
+    let currentPage = 1;
+
+    const itemsPerPage = 12;
+
+    if (!screen || !container) return;
 
     screen.style.display = "flex";
 
-    closeBtn.onclick = function(){
+    closeBtn.onclick = () => {
         screen.style.display = "none";
     };
 
-    async function loadAllCountries(){
-        try{
-            if(container.children.length > 1) return; 
+    function renderDisplay() {
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const listToShow = filteredCountries.slice(start, end);
 
-            container.innerHTML = '<div class="message">Loading data...</div>';
-            
-            const response = await fetch('https://open.oapi.vn/location/countries');
-            
-            if(!response.ok) throw new Error('Error API connection');
+        if (listToShow.length === 0) {
+            container.innerHTML = '<div class="message">No countries found.</div>';
+            return;
+        }
 
-            const data = await response.json();
-            
-            console.log("Loaded data:", data);
-
-            let list = [];
-            if(Array.isArray(data)) list = data;
-            else if(data && Array.isArray(data.data)) list = data.data;
-            else if(typeof data === 'object') list = Object.values(data);
-
-            if(list.length === 0) {
-                container.innerHTML = '<div class="message">No found any contry data</div>';
-                return;
-            }
-
-            let htmlContent = ''; 
-
-            list.forEach(country =>{                
-                const name = country.name?.common || country.name || country.countryName || "Unknown Name";
-
-                
-                let flag = "https://via.placeholder.com/300x160?text=No+Flag";
-                if (country.flags?.svg) flag = country.flags.svg;
-                else if (country.flags?.png) flag = country.flags.png;
-                else if (country.flag) flag = country.flag;
-
-                htmlContent += 
-                `
-                    <div class="card">
-                        <div class="flag-container">
-                            <img src="${flag}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x160?text=Image+Error'">
-                        </div>
-                        <div class="card-body">
-                            <h3 class="country-name">${name}</h3>
-                            
-                            <div class="info-row">
-                                
-                            </div>
+        container.innerHTML = listToShow.map(country => {
+            const name = country.name?.common || country.name || "Unknown";
+            const flag = country.flags?.svg || country.flags?.png || country.flag || "https://via.placeholder.com/300x160";
+            return `
+                <div class="card">
+                    <div class="flag-container">
+                        <img src="${flag}" alt="${name}" loading="lazy">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="country-name">${name}</h3>
+                        <div class="info-row">
+                            <span class="info-label">Region:</span> ${country.region || 'N/A'}
                         </div>
                     </div>
-                `;
-            });
+                </div>
+            `;
+        }).join('');
 
-            container.innerHTML = htmlContent;
+        renderPaginationUI();
+    }
 
-        }catch (error) {
+    //Phan them trang + qua trang
+    function renderPaginationUI() {
+        const totalPages = Math.ceil(filteredCountries.length / itemsPerPage);
+        let html = '';
+
+        if (totalPages <= 1) {
+            paginationContainer.innerHTML = '';
+            return;
+        }
+
+        for (let i = 1; i <= totalPages; i++) {
+            if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            } else if (i === currentPage - 2 || i === currentPage + 2) {
+                html += `<span>...</span>`;
+            }
+        }
+
+        paginationContainer.innerHTML = html;
+
+        paginationContainer.querySelectorAll('.page-btn').forEach(btn => {
+            btn.onclick = () => {
+                currentPage = parseInt(btn.getAttribute('data-page'));
+                renderDisplay();
+                container.scrollTo(0, 0); 
+            };
+        });
+    }
+
+    searchInput.oninput = (e) => {
+        const keyword = e.target.value.toLowerCase();
+        filteredCountries = allCountries.filter(c => {
+            const name = (c.name?.common || c.name || "").toLowerCase();
+            return name.includes(keyword);
+        });
+        currentPage = 1;
+        renderDisplay();
+    };
+
+ 
+    async function loadAllCountries() {
+        try {
+            container.innerHTML = '<div class="message">Fetching data...</div>';
+            const response = await fetch('https://open.oapi.vn/location/countries');
+            const result = await response.json();
+            
+            allCountries = result.data || result;
+            filteredCountries = [...allCountries];
+            
+            renderDisplay();
+        } catch (error) {
             console.error(error);
-            container.innerHTML = `<div class="message error">Error: ${error.message}</div>`;
+            container.innerHTML = `<div class="message error">Failed to load: ${error.message}</div>`;
         }
     }
 
